@@ -1,7 +1,8 @@
 
 import { Grid, Header, Image, Input,Button,Segment,Dropdown,Checkbox,Radio } from 'semantic-ui-react'
 import React, {useEffect, useState,useContext} from 'react';
-import UserContext from '../../Context/UserContext'
+import {UserContext} from '../../Context/UserContext'
+import firebase from 'firebase';
 
 // import firestore from "../../firebase/firebase";
 
@@ -35,7 +36,7 @@ function Homepage(){
   ])
   const handleSubmit = (e) =>{
     e.preventDefault()
-    const db = firestore.firestore();
+    const db = firebase.firestore();
     db.collection("users").add(
       {
         id:id,
@@ -85,7 +86,7 @@ function Homepage(){
     
   }
   const getdata= async ()=>{
-    const db = firestore.firestore();
+    const db = firebase.firestore();
     const arr=[]
     db.collection("users").get().then((querySnapshot) => {
       querySnapshot.forEach((doc) => {
@@ -101,7 +102,7 @@ function Homepage(){
   useEffect(()=>{
     // getdata()
   },[])
-  const user = useContext(UserContext)
+  const {user,setUser} = useContext(UserContext)
   return(
     <Grid>
       <Grid.Row centered>

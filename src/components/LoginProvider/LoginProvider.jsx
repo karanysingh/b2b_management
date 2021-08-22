@@ -1,16 +1,33 @@
-import React,{useContext}from 'react';
-import { UserProvider } from '../../Context/UserContext'
+import React,{useContext, useState}from 'react';
 // import Main from '../Main/Main';
 import Login from './Login';
 import Register from './Register';
+import {
+    BrowserRouter as Router,
+    Route,
+    Link,
+    Switch,useHistory
+  } from 'react-router-dom';
+import {UserContext} from '../../Context/UserContext'
 
+  
 export default function LoginProvider(){
-    const user = {name:'Karan',loggedIn:true}
+    const [user,setUser] = useContext(UserContext)
+    const history = useHistory();
+
     return(
-        <UserProvider value={user}>
-            {/* <Main></Main> */}
-            <Login></Login>
-            <Register></Register>
-        </UserProvider>
+                <ul>
+                <li>
+                    <Link to="/login">Login</Link>
+                </li>
+                <li>
+                    <Link to="/register">Register</Link>
+                </li>
+                {user.loggedIn&&(
+                <li>
+                    <Link to="/main">Access</Link>
+                </li>
+                )}
+                </ul>
     )
 }

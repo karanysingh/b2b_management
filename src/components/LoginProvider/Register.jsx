@@ -4,12 +4,15 @@ import { Grid, Header, Image, Input,Button,Segment,Dropdown,Checkbox,Radio} from
 import {register} from '../../firebase/Auth'
 import firebase from 'firebase';
 
+import {UserContext} from '../../Context/UserContext'
+
+
 export default function Register(){
     const [name,setname] = useState('null')
     const [email,setemail] = useState('null')
     const [pass,setpass] = useState('null')
     const [role,setrole] = useState('retail')
-
+    const [user,setUser] = useContext(UserContext)
     const handleLogin = async (e) => {
         e.preventDefault()
         try{
@@ -35,10 +38,17 @@ export default function Register(){
             })
             },1000
 
-        )}
+        )
+        if(userReg){
+            var docRef = db.collection("users").doc(userReg.uid);
+            setUser({name:docRef.data().name,loggedIn:true,role:docRef.data().role,uid:userReg.id})
+        }
+    
+    }
         }catch(e){
             console.log("error in creating user")
         }
+        
     }
 
     return(
