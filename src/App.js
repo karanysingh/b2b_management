@@ -20,7 +20,7 @@ function App() {
     <UserProvider>
     <Router>
     <Switch>
-    <Route exact path='/' component={LoginProvider}></Route>
+    <Route exact path='/' component={Login}></Route>
     <Route exact path='/login' component={Login}></Route>
     <Route exact path='/register' component={Register}></Route>
     <Route exact path='/main' component={Main}></Route>

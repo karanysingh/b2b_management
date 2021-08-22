@@ -112,7 +112,11 @@ export default function Main(){
       console.log("Error getting documents: ", error);
   });
   }
-  useEffect(()=>populateData())
+  useEffect(()=>
+  setTimeout(()=>{
+    populateData()},2000)
+    ,[]
+  )
   return( 
     <>
     { user.loggedIn && user.role==='admin'?

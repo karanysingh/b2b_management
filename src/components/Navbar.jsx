@@ -1,10 +1,25 @@
-import React, { useState } from 'react';
+import React, { useState,useContext } from 'react';
 import { Grid,Menu } from 'semantic-ui-react';
 import { useHistory } from 'react-router-dom';
+import {UserContext} from '../Context/UserContext'
+import firebase from 'firebase';
 
 export default function Navbar(){
     const history = useHistory()
     const [activeItem, setactiveItem] = useState("home")
+    const [user,setUser] = useContext(UserContext)
+
+
+    const signout = () => {
+        console.log('ce')
+        firebase.auth().signOut().then(function() {
+            console.log('Signed Out');
+            history.push('/')
+          }, function(error) {
+            console.error('Sign Out Error', error);
+          });
+    }
+
     return(
     <Grid
     //  style={{backgroundColor:'green'}} 
@@ -24,6 +39,31 @@ export default function Navbar(){
             Home
         </Menu.Item>
         <Menu.Item
+            name="manage"
+            active={activeItem==='manage'}
+            onClick={()=>{
+                setactiveItem('manage') 
+            history.push('/main')}}
+            >
+            Manage Products
+        </Menu.Item>
+        <Menu.Item
+            name="view"
+            active={activeItem==='view'}
+            onClick={()=>{
+                setactiveItem('view') 
+            history.push('/main')}}
+            >
+            View Products
+        </Menu.Item>
+        {user.loggedIn?(
+        <Menu.Item
+            name="signout"
+            onClick={signout} 
+            >
+            Signout
+        </Menu.Item>):(
+        <Menu.Item
             name="register"
             active={activeItem==='register'}
             onClick={()=>{
@@ -31,25 +71,8 @@ export default function Navbar(){
             history.push('/login')}}
             >
             Register/Login
-        </Menu.Item>
-        <Menu.Item
-            name="retail"
-            active={activeItem==='retail'}
-            onClick={()=>{
-                setactiveItem('retail') 
-            history.push('/retail')}}
-            >
-            Retail Owner
-        </Menu.Item>
-        <Menu.Item
-            name="wholesale"
-            active={activeItem==='wholesale'}
-            onClick={()=>{
-                setactiveItem('wholesale') 
-            history.push('/admin')}}
-            >
-            Wholesale Owner
-        </Menu.Item>
+        </Menu.Item>)
+    }
     </Menu>
     {/* </Grid.Column>
     </Grid.Row> */}
