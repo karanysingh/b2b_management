@@ -9,14 +9,23 @@ import {
     Switch,useHistory
   } from 'react-router-dom';
 import {UserContext} from '../../Context/UserContext'
+import Navbar from '../Navbar';
+import { Grid } from 'semantic-ui-react';
 
   
 export default function LoginProvider(){
     const [user,setUser] = useContext(UserContext)
     const history = useHistory();
 
-    return(
-                <ul>
+    return(<Grid container
+    //  style={{backgroundColor:'red'}}
+     >
+        <Grid.Row>
+            
+        <Navbar></Navbar>
+        </Grid.Row>
+        <Grid.Row>
+                {/* <ul>
                 <li>
                     <Link to="/login">Login</Link>
                 </li>
@@ -28,6 +37,8 @@ export default function LoginProvider(){
                     <Link to="/main">Access</Link>
                 </li>
                 )}
-                </ul>
+                </ul> */}
+                </Grid.Row>
+                </Grid>
     )
 }

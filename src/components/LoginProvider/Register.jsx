@@ -5,6 +5,7 @@ import {register} from '../../firebase/Auth'
 import firebase from 'firebase';
 
 import {UserContext} from '../../Context/UserContext'
+import Navbar from '../Navbar';
 
 
 export default function Register(){
@@ -53,6 +54,8 @@ export default function Register(){
 
     return(
         <Grid centered>
+          <Navbar></Navbar>
+
         <Grid.Row centered>
           <Grid.Column computer={8} mobile={12} 
         //   style={{backgroundColor:'green',minHeight:"10vh"}}

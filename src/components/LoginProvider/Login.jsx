@@ -6,6 +6,7 @@ import firebase from 'firebase';
 import { useHistory } from "react-router-dom";
 
 import {UserContext} from '../../Context/UserContext'
+import Navbar from '../Navbar';
 
 export default function Login(){
     const [email,setemail] = useState('null')
@@ -14,7 +15,7 @@ export default function Login(){
 
     const history = useHistory();
     const db = firebase.firestore();
-
+    
     const handleLogin = async (e) => {
         e.preventDefault()
         console.log(email,pass)
@@ -26,7 +27,7 @@ export default function Login(){
                 if (doc.exists) {
                     console.log("Document data:", doc.data());
                     setUser({name:doc.data().name,loggedIn:true,role:doc.data().role,uid:userReg.id})
-                    history.push('/')
+                    history.push('/main')
                 } else {
                     // doc.data() will be undefined in this case
                     console.log("No such document!");
@@ -38,6 +39,7 @@ export default function Login(){
     }
     return(
         <Grid centered>
+          <Navbar></Navbar>
         <Grid.Row centered>
           <Grid.Column computer={8} mobile={12} 
         //   style={{backgroundColor:'green',minHeight:"10vh"}}
@@ -56,11 +58,15 @@ export default function Login(){
               <br></br>
               <Input onChange={(e,data)=>{setpass(data.value)}} placeholder='Password' fluid></Input>
               <br></br>
-              <Button onClick={handleLogin} secondary>Login</Button>
+              <Button onClick={handleLogin} primary>Login</Button>
+              <Button secondary onClick={()=>history.push('/register')}>
+          Register
+        </Button>
             </Segment>
           </Grid.Column>
         </Grid.Row>
         <Grid.Row centered>
+          
         </Grid.Row>       
       </Grid>
     )

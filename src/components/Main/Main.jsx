@@ -1,248 +1,265 @@
-
-import { Grid, Header, Image, Input,Button,Segment,Dropdown,Checkbox,Radio } from 'semantic-ui-react'
-import React, {useEffect, useState,useContext} from 'react';
+import React, {useContext,useEffect,useState} from 'react';
+import {useHistory} from 'react-router-dom'
+import {Grid,Segment,Input,Button, Table, Tab} from 'semantic-ui-react';
+import Navbar from '../Navbar';
 import {UserContext} from '../../Context/UserContext'
 import firebase from 'firebase';
 
-// import firestore from "../../firebase/firebase";
-
-
-const ROLES = {
-  ADMIN:'admin',
-  CLIENT:'client',
-  CONSUMER:'consumer',
-}
-const temp=[
-  { key: 'af', value: 'af', flag: 'af', text: 'Afghanistan' },
+const shopData = [
+  {
+    name:'potato',
+    price:'$3',
+    quantity:'per KG',
+    availability:true
+  },
+  {
+    name:'potato',
+    price:'$3',
+    quantity:'per KG',
+    availability:true
+  },
+  {
+    name:'potato',
+    price:'$3',
+    quantity:'per KG',
+    availability:true
+  },
+  {
+    name:'potato',
+    price:'$3',
+    quantity:'per KG',
+    availability:true
+  },
+  {
+    name:'potato',
+    price:'$3',
+    quantity:'per KG',
+    availability:true
+  }
 ]
 
-function Homepage(){
-    
-  const [id,setId] = useState('null')
-  const [name,setName] = useState('null')
-  const [role,setRole] = useState('null')
-  
-  const [idSelect,setIdSelect] = useState('null')
-  const [nameSelect,setNameSelect] = useState('null')
-  const [roleSelect,setRoleSelect] = useState('null')
+export default function Main(){
+  const [user,setUser] = useContext(UserContext)
+  const [additem,setadditem] = useState(false)
+  const [pname,setPname] = useState('null')
+  const [price,setPrice] = useState('null')
+  const [quantity,setQuantity] = useState('null')
+  const [availability,setAvailability] = useState('null')
+  const [data,setdata] = useState([
+    {
+      name:'potato',
+      price:'$3',
+      quantity:'per KG',
+      availability:true
+    }])
+  const db = firebase.firestore();
 
-  const [admin,setadmin]=useState(false)
-  const [client,setclient]=useState(false)
-  const [consumer,setconsumer]=useState(false)
-
-  
-  const [options,setoptions] = useState([
-    { key: 'af', value: 'af', flag: 'af', text: 'Afghanistan' },
-  ])
-  const handleSubmit = (e) =>{
-    e.preventDefault()
-    const db = firebase.firestore();
-    db.collection("users").add(
-      {
-        id:id,
-        name:name,
-        role:role,
-      }
-    )
-    .then(()=>{
-      console.log("Doc");
-    })
-    .catch((error)=>{
-      console.log("Error writing document:", error)
-    })
-  }
-  const handleSelect = (e,{value,checked}) => {
-    e.preventDefault()
-    console.log(e)
-    console.log(value)
-    // console.log(checked)
-    if(checked){
-      if(options[value].role === ROLES.ADMIN){
-        setadmin(true)
-      }
-      if(options[value].role === ROLES.CONSUMER){
-        setconsumer(true)
-      }
-      if(options[value].role === ROLES.CLIENT){
-        setclient(true)
-      }
+  // user = { name: 'guest', loggedIn: false, role: 'guest', uid: '101' }
+  const history = useHistory()
+  const handleAddItem = (e) => {
+    if(additem===false){
+    setadditem(true)
     }else{
-      
-      if(options[value].role === ROLES.ADMIN){
-        setadmin(false)
-      }
-      if(options[value].role === ROLES.CONSUMER){
-        setconsumer(false)
-      }
-      if(options[value].role === ROLES.CLIENT){
-        setclient(false)
-      }
-
-    }
-    setTimeout(() => {
-      
-    console.log("user selected:",options[value])
-    }, 200);
-    
-  }
-  const getdata= async ()=>{
+    e.preventDefault()
+    try{
+    // console.log(userReg)
     const db = firebase.firestore();
-    const arr=[]
-    db.collection("users").get().then((querySnapshot) => {
+    if(user.loggedIn){
+    setTimeout(
+        ()=>{
+            
+    db.collection("products").add(
+        {
+            pname:pname,
+            price:price,
+            quantity:quantity,
+            availability:availability,
+        }
+        )
+        .then(()=>{
+        console.log("Doc");
+        })
+        .catch((error)=>{
+        console.log("Error writing document:", error)
+        })
+        },1000
+
+    )
+
+}
+    }catch(e){
+        console.log("error in adding product")
+    }
+  }
+  }
+  const populateData = async () =>{
+    var arr = []
+    db.collection("products").get()
+    .then((querySnapshot) => {
       querySnapshot.forEach((doc) => {
           // doc.data() is never undefined for query doc snapshots
           console.log(doc.id, " => ", doc.data());
-          // arr.push({value:doc.id,key:doc.data().role,text:doc.data().name})
-          arr.push({key:doc.id,value:doc.data().id,text:doc.data().name,role:doc.data().role})
-      });
-    setoptions(arr)
-    console.log(options)
+          arr.push(doc.data())
+          // console.log(arr)
+      }
+      );
+      
+  setTimeout(
+    setdata(arr),1000
+    )
+  })
+  .catch((error) => {
+      console.log("Error getting documents: ", error);
   });
   }
-  useEffect(()=>{
-    // getdata()
-  },[])
-  const {user,setUser} = useContext(UserContext)
-  return(
-    <Grid>
-      <Grid.Row centered>
-        <Grid.Column width={10} 
-        // style={{backgroundColor:'green',minHeight:"10vh"}}
-        >
-          <Segment centered inverted color="black">
-            ADD USER 
-          </Segment>
-        </Grid.Column>
-      </Grid.Row>
-      <Grid.Row centered>
-        <Grid.Column width={5} 
-        // style={{backgroundColor:'green',minHeight:"10vh"}}
-        ><Segment inverted color="red">
-        <Input fluid onChange={(e)=>{
-          setId(e.target.value) 
-          }} placeholder="Id" ></Input>
-        <Input fluid onChange={(e)=>setName(e.target.value)} placeholder="Name" ></Input><Radio
-            label='admin'
-            name='radioGroup'
-            value='admin'
-            checked={role === 'admin'}
-            onChange={()=>{
-              setRole('admin')
-          }}
-          /><Radio
-          label='client'
-          name='radioGroup'
-          value='client'
-          checked={role === 'client'}
-          onChange={()=>{
-            setRole('client')
-        }}
-        /><Radio
-        label='consumer'
-        name='radioGroup'
-        value='consumer'
-        checked={role === 'consumer'}
-        onChange={()=>{
-          setRole('consumer')
-        }}
-      />
-        <Button fluid primary type="submit" onClick={handleSubmit}>Submit</Button>
+  useEffect(()=>populateData())
+  return( 
+    <>
+    { user.loggedIn && user.role==='admin'?
+  (
+    <Grid centered>
+      <Navbar></Navbar>  
+    <Grid.Row centered>
+      <Grid.Column computer={8} mobile={12} 
+    //   style={{backgroundColor:'green',minHeight:"10vh"}}
+      >
+        <Segment centered inverted color="red">
+          Hi {user.name}! You have <b> {user.role} </b> level access.
         </Segment>
-        </Grid.Column>
-        <Grid.Column width={5} 
-        // style={{backgroundColor:'blue',minHeight:"10vh"}}
-        ><Segment inverted color="green">
-        <Header>
-          Id: {id}
-        </Header>
-        <Header>
-          Name: {name}
-        </Header>
-        <Header>
-          Role: {role}
-        </Header>
-        </Segment></Grid.Column>
-      </Grid.Row>
-      <Grid.Row centered>
-        <Grid.Column width={10} 
-        // style={{backgroundColor:'green',minHeight:"10vh"}}
-        >
-          <Segment centered inverted color="black">
-            SELECT USER
-          </Segment>
-        </Grid.Column>
-      </Grid.Row>
-      <Grid.Row centered>
-        <Grid.Column width={5} 
-        // style={{backgroundColor:'green',minHeight:"10vh"}}
-        >     <Segment inverted color="blue">
-        <Header>
-          Role Selected: {admin?'Admin':client?'Client':(consumer&&'Consumer')}
-
-        </Header>
-        <Header>
-        LOGGED IN STATUS: {user.name}
-        </Header>
-        </Segment>
+      </Grid.Column>
+    </Grid.Row>
+    <Grid.Row centered>
+      <Grid.Column computer={10}  mobile={12} 
+    //   style={{backgroundColor:'green',minHeight:"10vh"}}
+      >
+        <Segment centered>
+          <Table color="red" singleLine>
+              <Table.Header>
+                <Table.Row>
+                  <Table.HeaderCell>Product Name</Table.HeaderCell>
+                  <Table.HeaderCell>Product Price</Table.HeaderCell>
+                  <Table.HeaderCell>Product Quantity</Table.HeaderCell>
+                  <Table.HeaderCell>Product Availability</Table.HeaderCell>
+                </Table.Row>
+                
+              </Table.Header>
+              <Table.Row>
+                { additem?
+                      (
+                        <>
+                        <Table.Cell>
+                        <Input 
+                        onChange={(e,{value})=>setPname(value)}
+                        ></Input>
+                        </Table.Cell>
+                        <Table.Cell>
+                        <Input                        
+                        onChange={(e,{value})=>setPrice(value)}
+                        ></Input>
+                        </Table.Cell>
+                        <Table.Cell>
+                        <Input                       
+                        onChange={(e,{value})=>setQuantity(value)}
+></Input>
+                        </Table.Cell>
+                        <Table.Cell>
+                        <Input                        
+                        onChange={(e,{value})=>setAvailability(value)}
+></Input>
+                        </Table.Cell>
+                        </>
+                      )
+                      :null
+                    }
+                      </Table.Row>
+                <Table.Row>
+                  <Table.Cell width='4'>
+                    <Button color={additem?'blue':'white'} onClick={(e)=>handleAddItem(e)} fluid>
+                    Add Item +
+                    </Button>
+                    
+                  </Table.Cell>
+                  <Table.Cell>
+                    
+                  {additem?
+                    <Button circular  color='red' onClick={(e)=>setadditem(false)} >
+                    Cancel
+                    </Button>:null} 
+                  </Table.Cell>
+                </Table.Row>
+                      
+                <Table.Body>
+                  {
+                    data.map((product)=>{
+                      return(
+                        
+                  <Table.Row>
+                  <Table.Cell>{product.pname}</Table.Cell>
+                  <Table.Cell>{product.price}</Table.Cell>
+                  <Table.Cell>{product.quantity}</Table.Cell>
+                  <Table.Cell>{product.availability?'yes':'no'}</Table.Cell>
+                </Table.Row>
+                      )
+                    })
+                  }
+                </Table.Body>
+          </Table>
           
-        </Grid.Column>
-        <Grid.Column width={5} 
-        // style={{backgroundColor:'blue',minHeight:"10vh"}}
-        >
-   
-  {
-    options.map((ele,index)=>{
-      return(
-        <Segment>
-      <Checkbox value={index} onChange={handleSelect} label={<label>{ele.text}</label>} />
         </Segment>
-      )
-    })
-  }
-        </Grid.Column>
-      </Grid.Row>
-      <Grid.Row centered>
-      {admin? (
-        <Grid.Column width={3} 
-        // style={{backgroundColor:'red',minHeight:"10vh"}}
-        >
-          <Segment inverted color="red">
-          <Header>
-            VISIBILE TO ADMINS
-          </Header>
-          </Segment>
-}
-        </Grid.Column>
-      ):(client?(
-        <Grid.Column width={3} 
-        // style={{backgroundColor:'green',minHeight:"10vh"}}
-        >
-          <Segment inverted color="green">
-          <Header>
-            VISIBILE TO CLIENTS
-          </Header>
-          </Segment>
-        </Grid.Column>
-      ):(consumer&&
-        <Grid.Column width={3} 
-        // style={{backgroundColor:'blue',minHeight:"10vh"}}
-        >
-          <Segment inverted color="blue">
-          <Header>
-            VISIBILE TO CONSUMERS
-          </Header>
-          </Segment>
-        </Grid.Column>))
-        }
-      </Grid.Row>
-    </Grid>
+      </Grid.Column>
+    </Grid.Row>
+    <Grid.Row centered>
+    </Grid.Row>  
+  </Grid> ):((user.loggedIn&&user.role=="retail")?(
+    <Grid centered>
+      <Navbar></Navbar>  
+    <Grid.Row centered>
+      <Grid.Column computer={8} mobile={12} 
+    //   style={{backgroundColor:'green',minHeight:"10vh"}}
+      >
+        <Segment centered inverted color="red">
+          Hi {user.name}! You have <b> {user.role} </b> level access.
+        </Segment>
+      </Grid.Column>
+    </Grid.Row>
+    <Grid.Row centered>
+      <Grid.Column computer={10}  mobile={12} 
+    //   style={{backgroundColor:'green',minHeight:"10vh"}}
+      >
+        <Segment centered>
+          <Table color="red" singleLine>
+              <Table.Header>
+                <Table.Row>
+                  <Table.HeaderCell>Product Name</Table.HeaderCell>
+                  <Table.HeaderCell>Product Price</Table.HeaderCell>
+                  <Table.HeaderCell>Product Quantity</Table.HeaderCell>
+                  <Table.HeaderCell>Product Availability</Table.HeaderCell>
+                </Table.Row>
+                
+              </Table.Header>
+                <Table.Body>
+                  {
+                    data.map((product)=>{
+                      return(
+                        
+                  <Table.Row>
+                  <Table.Cell>{product.pname}</Table.Cell>
+                  <Table.Cell>{product.price}</Table.Cell>
+                  <Table.Cell>{product.quantity}</Table.Cell>
+                  <Table.Cell>{product.availability?'yes':'no'}</Table.Cell>
+                </Table.Row>
+                      )
+                    })
+                  }
+                </Table.Body>
+          </Table>
+          
+        </Segment>
+      </Grid.Column>
+    </Grid.Row>
+    <Grid.Row centered>
+    </Grid.Row>  
+  </Grid> ):history.push('/'))   }
+  </>
   )
 }
-
-function Main() {
-  return (
-      <Homepage></Homepage>
-  );
-}
-
-export default Main;
