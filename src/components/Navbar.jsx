@@ -14,6 +14,7 @@ export default function Navbar(){
         console.log('ce')
         firebase.auth().signOut().then(function() {
             console.log('Signed Out');
+            setUser([{ name: 'guest', loggedIn: false, role: 'guest', uid: '101' }])
             history.push('/')
           }, function(error) {
             console.error('Sign Out Error', error);
@@ -56,6 +57,17 @@ export default function Navbar(){
             >
             View Products
         </Menu.Item>
+        
+        <Menu.Item
+            name="cart"
+            active={activeItem==='cart'}
+            onClick={()=>{
+                setactiveItem('cart') 
+            history.push('/cart')}}
+            >
+            View Cart
+        </Menu.Item>
+
         {user.loggedIn?(
         <Menu.Item
             name="signout"

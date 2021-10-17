@@ -26,7 +26,18 @@ export default function Login(){
             docRef.get().then((doc) => {
                 if (doc.exists) {
                     console.log("Document data:", doc.data());
-                    setUser({name:doc.data().name,loggedIn:true,role:doc.data().role,uid:userReg.id})
+                    setUser({
+                      name:doc.data().name,
+                      loggedIn:true,
+                      role:doc.data().role,
+                      uid:userReg.uid
+                    })
+                    console.log({
+                      name:doc.data().name,
+                      loggedIn:true,
+                      role:doc.data().role,
+                      uid:userReg.uid
+                    })
                     history.push('/main')
                 } else {
                     // doc.data() will be undefined in this case
