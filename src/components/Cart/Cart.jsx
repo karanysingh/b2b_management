@@ -9,7 +9,7 @@ const db = firebase.firestore();
 
 export default function Cart(){
   const [user, setUser,products,setProducts] = useContext(UserContext)
-  const [cart,setCart] = useState({})
+  // const [cart,setCart] = useState({})
   const [userorders,setuserorders] = useState([{
     pname: 'potato',
     price: '$3',
@@ -26,7 +26,7 @@ export default function Cart(){
   const history = useHistory()
   var arr = []
 
-  async function populateCart(){
+  function populateCart(){
     db.collection("cart").get()
       .then((querySnapshot) => {
         querySnapshot.forEach((doc) => {
@@ -38,7 +38,7 @@ export default function Cart(){
         );
 
         setTimeout(()=>{
-          setCart(arr)
+          var cart = arr
           var orders = []
     for(let i=0;i<cart.length; i++){
       if(cart[i].userid==user.uid){
@@ -73,9 +73,10 @@ export default function Cart(){
     
   }
   useEffect(()=>{
-    setTimeout(() => {
+    // setTimeout(() => {
       populateCart()
-    }, 1000);
+      console.log("populating")
+    // }, 1000);
   },[])
     return(
         <>

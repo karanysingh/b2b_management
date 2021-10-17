@@ -6,6 +6,7 @@ import firebase from 'firebase';
 
 import {UserContext} from '../../Context/UserContext'
 import Navbar from '../Navbar';
+import { useHistory } from 'react-router-dom'
 
 
 export default function Register(){
@@ -14,6 +15,7 @@ export default function Register(){
     const [pass,setpass] = useState('null')
     const [role,setrole] = useState('retail')
     const [user,setUser] = useContext(UserContext)
+      const history = useHistory()
     const handleLogin = async (e) => {
         e.preventDefault()
         try{
@@ -33,21 +35,22 @@ export default function Register(){
             )
             .then(()=>{
             console.log("Doc");
+            console.log(userReg)
             })
             .catch((error)=>{
             console.log("Error writing document:", error)
             })
             },1000
 
-        )
+        )}
         if(userReg){
-            var docRef = db.collection("users").doc(userReg.uid);
-            setUser({name:docRef.data().name,loggedIn:true,role:docRef.data().role,uid:userReg.id})
+              setUser({name:name,loggedIn:true,role:role,uid:userReg.uid})
+              history.push('/main')
         }
     
-    }
-        }catch(e){
-            console.log("error in creating user")
+        }
+        catch(e){
+            console.log("error in creating user",e)
         }
         
     }

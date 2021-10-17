@@ -39,6 +39,7 @@ export default function Navbar(){
         >
             Home
         </Menu.Item>
+        {user.role=="admin" &&(
         <Menu.Item
             name="manage"
             active={activeItem==='manage'}
@@ -47,7 +48,17 @@ export default function Navbar(){
             history.push('/main')}}
             >
             Manage Products
-        </Menu.Item>
+        </Menu.Item>)}
+        {user.role=="admin" &&(
+        <Menu.Item
+            name="accounts"
+            active={activeItem==='accounts'}
+            onClick={()=>{
+                setactiveItem('accounts') 
+            history.push('/accounts')}}
+            >
+            Manage Users
+        </Menu.Item>)}
         <Menu.Item
             name="view"
             active={activeItem==='view'}

@@ -152,12 +152,14 @@ export default function Main() {
             <Grid.Row centered>
               <Grid.Column computer={10} mobile={12}
               //   style={{backgroundColor:'green',minHeight:"10vh"}}
-              >{Msg?
+              >{
+                Msg?
                  <Message
           onDismiss={()=>setMsg(false)}
           header='Order Placed Succesfully'
         />
-        :null}
+        :null
+        }
                 <Segment centered>
 
       <Dimmer active={loaderActive}>
@@ -274,6 +276,7 @@ export default function Main() {
                 //   style={{backgroundColor:'green',minHeight:"10vh"}}
                 >
                   <Segment centered>
+                    {Msg?
                   <Message
           onDismiss={()=>setMsg(false)}
           header='Order Placed Succesfully'
@@ -295,6 +298,18 @@ export default function Main() {
                         </Table.Row>
 
                       </Table.Header>
+                      <Table.Row>
+                      <Table.Cell></Table.Cell>
+                      <Table.Cell colSpan={additem ? 1 : 3}>
+                        {placeOrder?
+                        <Button color={'blue'} onClick={() => handlePlaceOrder()} fluid>
+                          Place Order
+                        </Button>:null}
+
+                      </Table.Cell>
+                      <Table.Cell>
+                      </Table.Cell>
+                    </Table.Row>
                       <Table.Body>
                         {
                           products.map((product) => {

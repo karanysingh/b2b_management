@@ -20,7 +20,7 @@ async function populateData(setProducts){
         setTimeout(()=>{
           setProducts(arr)
         }
-          , 1000
+          , 2000
         )
       })
       .catch((error) => {
