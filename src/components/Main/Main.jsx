@@ -161,7 +161,7 @@ export default function Main() {
                 <Segment centered>
 
       <Dimmer active={loaderActive}>
-        <Loader indeterminate>Preparing Files</Loader>
+        <Loader indeterminate>Checking Records</Loader>
       </Dimmer>
                   <Table color="red" singleLine>
                     <Table.Header>
@@ -280,7 +280,7 @@ export default function Main() {
         />
         :null}
       <Dimmer active={loaderActive}>
-        <Loader indeterminate>Preparing Files</Loader>
+        <Loader indeterminate>Checking Records</Loader>
       </Dimmer>
                     <Table color="red" singleLine>
                       <Table.Header>
